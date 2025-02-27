@@ -3,7 +3,8 @@ import Button from './components/Button.vue'
 import ProgressBar from './components/ProgressBar.vue'
 import PercentInput from './components/PercentInput.vue'
 import Toggle from './components/Toggle.vue'
-import { ref, computed } from 'vue'
+import SpeedRange from './components/SpeedRange.vue'
+import { ref, computed, watch } from 'vue'
 
 const percentage = ref<number | null>(0)
 const interval = ref<ReturnType<typeof setInterval> | null>(null)
@@ -13,6 +14,7 @@ const countdownInterval = ref<ReturnType<typeof setInterval> | null>(null)
 const countdown = ref(3)
 const currentState = ref<'progress' | 'complete' | 'warning' | 'error'>('progress')
 const stateMessage = ref<string>('')
+const speed = ref(100)
 
 const progressState = computed(() => {
   if (interval.value) return 'progress'
@@ -65,6 +67,32 @@ const handleAutoRestartChange = (newValue: boolean) => {
   }
 }
 
+const updateInterval = () => {
+  if (interval.value) {
+    clearInterval(interval.value)
+    interval.value = setInterval(() => {
+      if (percentage.value !== null) {
+        percentage.value++
+        if (percentage.value >= 100) {
+          clearInterval(interval.value!)
+          interval.value = null
+          if (autoRestart.value) {
+            currentState.value = 'complete'
+            triggerRestart()
+          } else {
+            currentState.value = 'complete'
+          }
+        }
+      }
+    }, speed.value)
+  }
+}
+
+// Watch for speed changes
+watch(speed, () => {
+  updateInterval()
+})
+
 const startProgress = () => {
   clearTimeouts()
   if (!percentage.value || percentage.value >= 100) {
@@ -86,7 +114,7 @@ const startProgress = () => {
         }
       }
     }
-  }, 100)
+  }, speed.value)
 }
 
 const stopOrClear = () => {
@@ -115,7 +143,14 @@ const setError = () => {
 <template>
   <main>
     <div class="progress-container">
-      <ProgressBar :progress="percentage ?? 0" :state="progressState" />
+      <SpeedRange
+        v-model="speed"
+      />
+      <ProgressBar 
+        :progress="percentage ?? 0" 
+        :state="progressState"
+        :speed="speed"
+      />
       <PercentInput 
         v-model="percentage" 
         :disabled="!!interval"

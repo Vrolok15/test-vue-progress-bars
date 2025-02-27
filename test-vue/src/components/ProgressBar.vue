@@ -4,10 +4,12 @@ import { computed } from 'vue'
 interface Props {
   progress: number
   state?: 'progress' | 'complete' | 'warning' | 'error'
+  speed?: number
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  state: 'progress'
+  state: 'progress',
+  speed: 100
 })
 
 const radius = 40
@@ -23,6 +25,9 @@ const stateColors = {
 const strokeColor = computed(() => stateColors[props.state])
 const showIcon = computed(() => props.state === 'warning' || props.state === 'error' || props.state === 'complete')
 const iconName = computed(() => props.state === 'complete' ? 'check_circle' : props.state)
+
+// Make reverse transition speed proportional to current speed (half the interval time)
+const transitionDuration = computed(() => Math.max(props.speed * 0.5, 50) + 'ms')
 </script>
 
 <template>
@@ -49,6 +54,7 @@ const iconName = computed(() => props.state === 'complete' ? 'check_circle' : pr
         :stroke-dasharray="circumference"
         :stroke-dashoffset="circumference - (progress / 100) * circumference"
         transform="rotate(-90 50 50)"
+        :style="{ transition: `stroke-dashoffset ${transitionDuration}` }"
       />
       <!-- Percentage text or icon -->
       <text
@@ -82,7 +88,7 @@ const iconName = computed(() => props.state === 'complete' ? 'check_circle' : pr
 
 <style>
 @import '../assets/variables.css';
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=warning,error,check_circle');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0');
 </style>
 
 <style scoped>
@@ -93,7 +99,7 @@ const iconName = computed(() => props.state === 'complete' ? 'check_circle' : pr
 }
 
 circle {
-  transition: stroke-dashoffset 0.3s ease;
+  transition: stroke 0.3s ease;
 }
 
 .material-symbols-outlined {
@@ -103,5 +109,10 @@ circle {
   align-items: center;
   width: 100%;
   height: 100%;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
 }
 </style> 
