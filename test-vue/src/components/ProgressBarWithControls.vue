@@ -89,7 +89,12 @@ const triggerRestart = () => {
 
 const handleAutoRestartChange = (newValue: boolean) => {
   autoRestart.value = newValue
-  if (newValue && percentage.value === 100 && !interval.value) {
+  if (!newValue) {
+    // Clear any pending restart when auto-restart is turned off
+    clearTimeouts()
+    stateMessage.value = ''
+  } else if (percentage.value === 100 && !interval.value) {
+    // Only start restart if at 100% and not currently running
     currentState.value = 'complete'
     triggerRestart()
   }
