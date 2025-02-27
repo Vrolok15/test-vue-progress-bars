@@ -63,12 +63,6 @@ const renderShape = computed(() => {
         viewBox: '0 0 100 10',
         isBar: true
       }
-    case 'volume':
-      return {
-        ...baseShape,
-        viewBox: '0 0 10 100',
-        isVertical: true
-      }
     default: // circle
       return {
         ...baseShape,
