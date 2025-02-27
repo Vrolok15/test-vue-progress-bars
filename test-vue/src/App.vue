@@ -2,10 +2,15 @@
 import Button from './components/Button.vue'
 import ProgressBar from './components/ProgressBar.vue'
 import PercentInput from './components/PercentInput.vue'
+import Toggle from './components/Toggle.vue'
 import { ref, computed } from 'vue'
 
 const percentage = ref<number | null>(0)
 const interval = ref<ReturnType<typeof setInterval> | null>(null)
+const autoRestart = ref(false)
+const restartTimeout = ref<ReturnType<typeof setTimeout> | null>(null)
+const countdownInterval = ref<ReturnType<typeof setInterval> | null>(null)
+const countdown = ref(3)
 const currentState = ref<'progress' | 'complete' | 'warning' | 'error'>('progress')
 const stateMessage = ref<string>('')
 
@@ -19,7 +24,49 @@ const handleStateChange = (state: 'progress' | 'complete' | 'warning' | 'error',
   stateMessage.value = message || ''
 }
 
+const clearTimeouts = () => {
+  if (interval.value) {
+    clearInterval(interval.value)
+    interval.value = null
+  }
+  if (restartTimeout.value) {
+    clearTimeout(restartTimeout.value)
+    restartTimeout.value = null
+  }
+  if (countdownInterval.value) {
+    clearInterval(countdownInterval.value)
+    countdownInterval.value = null
+  }
+}
+
+const triggerRestart = () => {
+  countdown.value = 3
+  stateMessage.value = `Restarting in ${countdown.value} seconds...`
+  countdownInterval.value = setInterval(() => {
+    countdown.value--
+    if (countdown.value <= 1) {
+      stateMessage.value = `Restarting in ${countdown.value} second...`
+    } else {
+      stateMessage.value = `Restarting in ${countdown.value} seconds...`
+    }
+  }, 1000)
+
+  restartTimeout.value = setTimeout(() => {
+    clearInterval(countdownInterval.value!)
+    startProgress()
+  }, 3000)
+}
+
+const handleAutoRestartChange = (newValue: boolean) => {
+  autoRestart.value = newValue
+  if (newValue && percentage.value === 100 && !interval.value) {
+    currentState.value = 'complete'
+    triggerRestart()
+  }
+}
+
 const startProgress = () => {
+  clearTimeouts()
   if (!percentage.value || percentage.value >= 100) {
     percentage.value = 0
   }
@@ -31,7 +78,12 @@ const startProgress = () => {
       if (percentage.value >= 100) {
         clearInterval(interval.value!)
         interval.value = null
-        currentState.value = 'complete'
+        if (autoRestart.value) {
+          currentState.value = 'complete'
+          triggerRestart()
+        } else {
+          currentState.value = 'complete'
+        }
       }
     }
   }, 100)
@@ -39,8 +91,7 @@ const startProgress = () => {
 
 const stopOrClear = () => {
   if (interval.value) {
-    clearInterval(interval.value)
-    interval.value = null
+    clearTimeouts()
   } else {
     percentage.value = 0
     currentState.value = 'progress'
@@ -49,19 +100,13 @@ const stopOrClear = () => {
 }
 
 const setWarning = () => {
-  if (interval.value) {
-    clearInterval(interval.value)
-    interval.value = null
-  }
+  clearTimeouts()
   currentState.value = 'warning'
   stateMessage.value = 'Warning state activated'
 }
 
 const setError = () => {
-  if (interval.value) {
-    clearInterval(interval.value)
-    interval.value = null
-  }
+  clearTimeouts()
   currentState.value = 'error'
   stateMessage.value = 'Error state activated'
 }
@@ -76,6 +121,11 @@ const setError = () => {
         :disabled="!!interval"
         @state-change="handleStateChange"
       />
+      <Toggle
+        :model-value="autoRestart"
+        label="Restart automatically"
+        @update:model-value="handleAutoRestartChange"
+      />
       <p v-if="stateMessage" class="state-message" :class="currentState">
         {{ stateMessage }}
       </p>
@@ -87,6 +137,7 @@ const setError = () => {
         :onClick="startProgress" 
       />
       <Button 
+        v-if="interval || percentage"
         :label="interval ? 'Stop' : 'Clear'" 
         :onClick="stopOrClear" 
         :variant="interval ? 'default' : 'clear'"
