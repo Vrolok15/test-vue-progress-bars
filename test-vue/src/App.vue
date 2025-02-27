@@ -31,7 +31,7 @@ const stopProgress = () => {
 <template>
   <main>
     <div class="progress-container">
-      <ProgressBar />
+      <ProgressBar :progress="percentage" />
       <PercentInput v-model="percentage" :disabled="!!interval" />
     </div>
     <div class="button-container">
@@ -77,9 +77,10 @@ main {
 
 .progress-container {
   display: flex;
+  flex-direction: column;
   gap: 1rem;
-  flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
   width: 100%;
 }
 </style>
