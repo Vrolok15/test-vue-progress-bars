@@ -20,10 +20,12 @@ const startProgress = () => {
   }, 100)
 }
 
-const stopProgress = () => {
+const stopOrClear = () => {
   if (interval.value) {
     clearInterval(interval.value)
     interval.value = null
+  } else {
+    percentage.value = 0
   }
 }
 </script>
@@ -36,7 +38,7 @@ const stopProgress = () => {
     </div>
     <div class="button-container">
       <Button label="Start!" :onClick="startProgress" />
-      <Button label="Stop!" :onClick="stopProgress" />
+      <Button :label="interval ? 'Stop!' : 'Clear'" :onClick="stopOrClear" />
     </div>
   </main>
 </template>
