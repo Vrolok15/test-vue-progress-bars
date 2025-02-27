@@ -2,6 +2,8 @@
 
 A Vue 3 application showcasing three different styles of progress bars with interactive controls.
 
+Check it out here - https://test-vue-progress-bars.vercel.app/
+
 ## Features
 
 - Three progress bar shapes:
