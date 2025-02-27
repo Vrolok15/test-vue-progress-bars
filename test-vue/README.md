@@ -1,39 +1,40 @@
-# test-vue
+# Interactive Progress Bars
 
-This template should help get you started developing with Vue 3 in Vite.
+A Vue 3 application showcasing three different styles of progress bars with interactive controls.
 
-## Recommended IDE Setup
+## Features
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- Three progress bar shapes:
+  - Circle: Traditional circular progress indicator
+  - Dashboard: Semi-circular gauge style
+  - Bar: Horizontal progress bar with percentage display
 
-## Type Support for `.vue` Imports in TS
+### Each progress bar includes:
+- Start/Stop/Clear controls
+- Speed adjustment slider
+- Manual percentage input
+- Auto-restart toggle
+- Warning and error states
+- Shape switching with arrow controls
+- Visual feedback through colors and icons
+- Smooth transitions and animations
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+## Technical Details
 
-## Customize configuration
+Built with:
+- Vue 3
+- TypeScript
+- CSS Variables for theming
+- Material Icons for status indicators
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+## Usage
 
-## Project Setup
+The progress bars can be:
+- Started/stopped with the control buttons
+- Adjusted in speed using the slider
+- Set to specific percentages via input
+- Switched between shapes using arrow controls
+- Set to auto-restart when complete
+- Triggered into warning or error states
 
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+Each progress bar operates independently and maintains its own state.
