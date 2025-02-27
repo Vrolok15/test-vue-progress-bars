@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-
 export type ProgressShape = 'circle' | 'dashboard' | 'bar'
 
 interface Props {
@@ -12,20 +10,6 @@ const props = defineProps<Props>()
 const emit = defineEmits<{
   'click': []
 }>()
-
-const shapes: ProgressShape[] = ['circle', 'dashboard', 'bar']
-
-const currentIndex = computed(() => shapes.indexOf(props.modelValue))
-
-const switchShape = (direction: 'prev' | 'next') => {
-  if (props.disabled) return
-  
-  const newIndex = direction === 'next' 
-    ? (currentIndex.value + 1) % shapes.length
-    : (currentIndex.value - 1 + shapes.length) % shapes.length
-  
-  emit('update:modelValue', shapes[newIndex])
-}
 </script>
 
 <template>
