@@ -51,6 +51,7 @@ const updateValue = (event: Event) => {
 
 <style scoped>
 .percent-input {
+  padding-left: 1rem;
   display: flex;
   align-items: center;
   gap: 4px;

@@ -76,11 +76,6 @@ input:checked + .slider {
   background-color: var(--color-green);
 }
 
-input:disabled + .slider {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
 input:checked + .slider:before {
   transform: translateX(16px);
 }

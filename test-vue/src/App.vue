@@ -3,11 +3,20 @@ import ProgressBarWithControls from './components/ProgressBarWithControls.vue'
 </script>
 
 <template>
-  <div class="progress-bar-container">
-    <ProgressBarWithControls :default-speed="125" />
-    <ProgressBarWithControls :default-speed="100" />
-    <ProgressBarWithControls :default-speed="75" />
-  </div>
+    <div class="progress-bars">
+      <ProgressBarWithControls 
+        defaultShape="circle"
+        :defaultSpeed="125"
+      />
+      <ProgressBarWithControls 
+        defaultShape="dashboard"
+        :defaultSpeed="100"
+      />
+      <ProgressBarWithControls 
+        defaultShape="bar"
+        :defaultSpeed="75"
+      />
+    </div>
 </template>
 
 <style>
@@ -18,24 +27,25 @@ import ProgressBarWithControls from './components/ProgressBarWithControls.vue'
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  padding: 1rem;
+  min-width: 100%;
+  padding: 2rem;
 }
 
-.progress-bar-container {
+.progress-bars {
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  width: 100%;
-  max-width: 1600px;
   flex-wrap: wrap;
-  align-items: center;
+  gap: 2rem;
   justify-content: center;
+  width: 100%;
+  max-width: 1400px;
+  padding: 0 1rem;
 }
 
-@media (min-width: 1000px) {
-  .progress-bar-container {
-    flex-direction: row;
-    gap: 1.5rem;
+@media (min-width: 1400px) {
+  .progress-bars {
+    padding: 0;
   }
 }
+
+/* Remove unused .progress-bar-container styles */
 </style>

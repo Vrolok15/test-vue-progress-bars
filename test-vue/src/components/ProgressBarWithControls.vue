@@ -4,14 +4,18 @@ import ProgressBar from './ProgressBar.vue'
 import PercentInput from './PercentInput.vue'
 import Toggle from './Toggle.vue'
 import SpeedRange from './SpeedRange.vue'
+import ShapeSelector from './ShapeSelector.vue'
+import type { ProgressShape } from './ShapeSelector.vue'
 import { ref, computed, watch } from 'vue'
 
 interface Props {
   defaultSpeed?: number
+  defaultShape?: ProgressShape
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  defaultSpeed: 100
+  defaultSpeed: 100,
+  defaultShape: 'circle'
 })
 
 const percentage = ref<number | null>(0)
@@ -23,6 +27,7 @@ const countdown = ref(3)
 const currentState = ref<'progress' | 'complete' | 'warning' | 'error'>('progress')
 const stateMessage = ref<string>('')
 const speed = ref(props.defaultSpeed)
+const shape = ref<ProgressShape>(props.defaultShape)
 
 const progressState = computed(() => {
   if (interval.value) return 'progress'
@@ -175,6 +180,8 @@ const setError = () => {
         :progress="percentage ?? 0" 
         :state="progressState"
         :speed="speed"
+        :shape="shape"
+        @update:shape="shape = $event"
       />
       <PercentInput 
         v-model="percentage" 
@@ -237,7 +244,7 @@ const setError = () => {
 .progress-container {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 2.5rem;
   justify-content: center;
   align-items: center;
   width: 100%;
@@ -278,5 +285,13 @@ const setError = () => {
 
 .state-message.progress {
   color: var(--color-blue);
+}
+
+.progress-with-shape-selector {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  justify-content: center;
 }
 </style> 
