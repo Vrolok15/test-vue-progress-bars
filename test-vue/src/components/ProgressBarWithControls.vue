@@ -232,6 +232,7 @@ const setError = () => {
   width: 100%;
   max-width: 450px;
   min-width: 400px;
+  max-height: 600px;
   flex: 1;
   padding: 1.5rem;
   border-radius: 8px;

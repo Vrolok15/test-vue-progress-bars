@@ -1,22 +1,79 @@
 <script setup lang="ts">
-import ProgressBarWithControls from './components/ProgressBarWithControls.vue'
+import { useRouter, useRoute } from 'vue-router'
+import { ref, computed } from 'vue'
+
+const router = useRouter()
+const route = useRoute()
+const isTransitioning = ref(false)
+
+// Compute transition name based on current route
+const transitionName = computed(() => 
+  route.path === '/progress' ? 'slide-right' : 'slide-left'
+)
+
+// Debug transition events
+const onBeforeEnter = (el: Element) => {
+  console.log(`🟢 Before Enter: ${route.path}, transition: ${transitionName.value}`)
+}
+
+const onEnter = (el: Element) => {
+  console.log(`✅ Enter: ${route.path}, transition: ${transitionName.value}`)
+}
+
+const onBeforeLeave = (el: Element) => {
+  console.log(`🔴 Before Leave: ${route.path}, transition: ${transitionName.value}`)
+  isTransitioning.value = true
+}
+
+const onLeave = (el: Element) => {
+  console.log(`❌ Leave: ${route.path}, transition: ${transitionName.value}`)
+}
+
+const onAfterLeave = () => {
+  console.log(`⚫ After Leave: ${route.path}, transition: ${transitionName.value}`)
+  isTransitioning.value = false
+}
+
+const pages = [
+  { path: '/progress', name: 'Progress Bars' },
+  { path: '/pie', name: 'Pie Chart' }
+]
 </script>
 
 <template>
-    <div class="progress-bars">
-      <ProgressBarWithControls 
-        defaultShape="circle"
-        :defaultSpeed="125"
-      />
-      <ProgressBarWithControls 
-        defaultShape="dashboard"
-        :defaultSpeed="100"
-      />
-      <ProgressBarWithControls 
-        defaultShape="bar"
-        :defaultSpeed="75"
-      />
-    </div>
+  <header>
+    <nav class="nav-menu">
+      <button
+        v-for="page in pages"
+        :key="page.path"
+        class="nav-button"
+        :class="{ active: route.path === page.path }"
+        @click="router.push(page.path)"
+      >
+        {{ page.name }}
+      </button>
+    </nav>
+  </header>
+  <div id="app">
+    <main class="main-content">
+      <router-view v-slot="{ Component, route }">
+        <transition
+          :name="transitionName"
+          mode="out-in"
+          @before-enter="onBeforeEnter"
+          @enter="onEnter"
+          @before-leave="onBeforeLeave"
+          @leave="onLeave"
+          @after-leave="onAfterLeave"
+        >
+          <component 
+            :is="Component" 
+            :key="route.path"
+          />
+        </transition>
+      </router-view>
+    </main>
+  </div>
 </template>
 
 <style>
@@ -24,28 +81,90 @@ import ProgressBarWithControls from './components/ProgressBarWithControls.vue'
 
 #app {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
+  flex-direction: column;
+  height: 100vh;
   min-width: 100%;
-  padding: 2rem;
+  padding: 5rem 0;
 }
 
-.progress-bars {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2rem;
-  justify-content: center;
+.nav-menu {
+  position: absolute;
   width: 100%;
-  max-width: 1400px;
-  padding: 0 1rem;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem;
+  box-shadow: 0 2px 10px var(--color-shadow);
+  z-index: 10;
 }
 
-@media (min-width: 1400px) {
-  .progress-bars {
-    padding: 0;
-  }
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
 }
 
-/* Remove unused .progress-bar-container styles */
+.nav-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--color-gray);
+  font-size: 1rem;
+  border-radius: 4px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.nav-button.active {
+  color: var(--color-blue);
+  background-color: rgba(33, 150, 243, 0.1);
+}
+
+/* Slide Transitions */
+.slide-left-enter-active,
+.slide-right-enter-active,
+.slide-left-leave-active,
+.slide-right-leave-active {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  position: absolute;
+  width: 100%;
+}
+
+/* Exit animations */
+.slide-left-leave-to {
+  transform: translateX(-100%); /* Progress Bars exits to the left */
+  opacity: 0;
+}
+
+.slide-right-leave-to {
+  transform: translateX(100%); /* Pie Chart exits to the right */
+  opacity: 0;
+}
+
+/* Enter animations */
+.slide-left-enter-from {
+  transform: translateX(100%); /* Pie Chart enters from the right */
+  opacity: 0;
+}
+
+.slide-right-enter-from {
+  transform: translateX(-100%); /* Progress Bars enters from the left */
+  opacity: 0;
+}
+
+/* Active states */
+.slide-left-enter-to,
+.slide-right-enter-to,
+.slide-left-leave-from,
+.slide-right-leave-from {
+  transform: translateX(0);
+  opacity: 1;
+}
 </style>
