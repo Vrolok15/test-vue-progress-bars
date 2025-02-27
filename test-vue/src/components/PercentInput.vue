@@ -1,28 +1,48 @@
 <script setup lang="ts">
-const props = defineProps<{
-  modelValue: number,
+interface Props {
+  modelValue: number | null
   disabled?: boolean
-}>()
+}
+
+const props = defineProps<Props>()
 
 const emit = defineEmits<{
-  'update:modelValue': [value: number]
+  'update:modelValue': [value: number | null]
+  'stateChange': [state: 'progress' | 'complete' | 'warning' | 'error', message?: string]
 }>()
 
 const updateValue = (event: Event) => {
   const input = event.target as HTMLInputElement
-  let value = Math.min(100, Math.max(0, Number(input.value)))
-  emit('update:modelValue', value)
+  const value = input.value
+
+  if (value === '') {
+    emit('update:modelValue', null)
+    emit('stateChange', 'warning', 'No value')
+    return
+  }
+
+  const numValue = Number(value)
+  if (isNaN(numValue)) {
+    emit('stateChange', 'error', 'Input is not a number')
+    return
+  }
+
+  const boundedValue = Math.min(100, Math.max(0, numValue))
+  emit('update:modelValue', boundedValue)
+  
+  if (boundedValue === 100) {
+    emit('stateChange', 'complete')
+  } else {
+    emit('stateChange', 'progress')
+  }
 }
 </script>
 
 <template>
   <div class="percent-input">
     <input 
-      type="number" 
-      :value="modelValue"
+      :value="modelValue ?? ''"
       :disabled="disabled"
-      min="0"
-      max="100"
       @input="updateValue"
     >
     <span>%</span>
