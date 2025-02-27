@@ -79,17 +79,27 @@ const pages = [
 <style>
 @import './assets/variables.css';
 
+
+h1 {
+  border-bottom: 2px solid var(--color-shadow);
+  text-align: center;
+  margin-bottom: 2rem;
+  letter-spacing: 1rem;
+  font-size: 3rem;
+  width: 100vw;
+}
+
 #app {
   display: flex;
   flex-direction: column;
   height: 100vh;
   min-width: 100%;
-  padding: 5rem 0;
+  padding: 1rem 0;
 }
 
 .nav-menu {
   position: absolute;
-  width: 100%;
+  width: 100vw;
   top: 0;
   display: flex;
   justify-content: center;
