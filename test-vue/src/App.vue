@@ -61,19 +61,46 @@ const pages = [
 <style>
 @import './assets/variables.css';
 
-/* Hide scrollbars but keep functionality */
+/* Custom scrollbar styles */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 0; /* Hide horizontal scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-shadow);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gray);
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-shadow) transparent;
+}
+
+/* Reset previous scrollbar hiding */
 html {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: thin;
+  -ms-overflow-style: auto;
+  height: 100%;
 }
 
 html::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+  display: block;
 }
 
 body {
   margin: 0;
   overflow-x: hidden;
+  min-height: 100%;
 }
 
 h1 {
@@ -88,9 +115,10 @@ h1 {
 #app {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
   min-width: 100%;
-  overflow: hidden; /* Added to prevent scrollbars */
+  overflow: hidden;
+  padding: 0;
 }
 
 .nav-menu {
@@ -107,7 +135,7 @@ h1 {
 
 .main-content {
   flex: 1;
-  padding: 2rem;
+  padding: 2rem 0;
   display: flex;
   justify-content: center;
   overflow: hidden;
