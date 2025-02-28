@@ -71,17 +71,10 @@ const chartData = computed<ChartData>(() => {
     datasets: [{
       data,
       backgroundColor: colors,
-      borderColor: Array(data.length).fill('white'),
+      borderColor: Array(data.length).fill('lightgray'),
       borderWidth: 2,
-      hoverBackgroundColor: [
-        ...props.sections.map(section => {
-          const colorVar = section.color.replace('var(--color-', '').replace(')', '')
-          return getColor(`--color-${colorVar}-shadow`)
-        }),
-        totalPercentage < 100 ? '#f5f5f5' : []
-      ].flat(),
       hoverBorderColor: Array(data.length).fill('white'),
-      hoverBorderWidth: 3
+      hoverBorderWidth: 4
     }]
   }
 })

@@ -1,15 +1,19 @@
 <script setup lang="ts">
+import ColorPicker from './ColorPicker.vue'
+
 interface Props {
   modelValue: string | number
   label: string
   placeholder?: string
   type?: 'text' | 'select' | 'percent'
   options?: { name: string, value: string }[]
+  sectionColor?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
   placeholder: '',
-  type: 'text'
+  type: 'text',
+  sectionColor: ''
 })
 
 const emit = defineEmits<{
@@ -73,22 +77,15 @@ const handleBlur = (event: Event) => {
       <input 
         v-if="type === 'text'"
         :value="modelValue"
+        :style="{ color: sectionColor }"
         @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
         :placeholder="placeholder"
       />
-      <select
+      <ColorPicker
         v-else-if="type === 'select'"
-        :value="modelValue"
-        @change="$emit('update:modelValue', ($event.target as HTMLSelectElement).value)"
-      >
-        <option 
-          v-for="option in options" 
-          :key="option.value"
-          :value="option.value"
-        >
-          {{ option.name }}
-        </option>
-      </select>
+        :modelValue="modelValue as string"
+        @update:modelValue="$emit('update:modelValue', $event)"
+      />
       <div v-else class="percent-input">
         <input
           type="number"
@@ -127,6 +124,8 @@ label {
 
 .input-container {
   display: flex;
+  min-height: 40px; /* Match color preview height */
+  align-items: center;
 }
 
 input, select {

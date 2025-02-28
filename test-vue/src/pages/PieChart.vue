@@ -178,7 +178,21 @@ const handleSave = (updates: { name: string, color: string, percentage: number }
   const section = editingSection.value && sections.value.find(s => s.id === editingSection.value?.id)
   if (section) {
     section.name = updates.name
-    section.color = updates.color
+    
+    // Always create/update a CSS variable for the color
+    const varName = `--section-color-${section.id}`
+    if (updates.color.startsWith('#')) {
+      // For hex colors from color picker
+      document.documentElement.style.setProperty(varName, updates.color)
+    } else {
+      // For our predefined colors, copy their value
+      const value = getComputedStyle(document.documentElement)
+        .getPropertyValue(updates.color.replace('var(', '').replace(')', ''))
+      document.documentElement.style.setProperty(varName, value)
+    }
+    // Always use CSS variable in section
+    section.color = `var(${varName})`
+    
     section.percentage = updates.percentage
     balancePercentages(section.id)
   }
@@ -213,7 +227,9 @@ const handleSave = (updates: { name: string, color: string, percentage: number }
         />
       </div>
       <div class="pie-chart">
-        <PieChartComponent :sections="enabledSections" />
+        <PieChartComponent 
+          :sections="enabledSections"
+        />
       </div>
     </div>
     <SectionDialog

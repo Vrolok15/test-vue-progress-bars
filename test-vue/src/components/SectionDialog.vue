@@ -72,7 +72,7 @@ const handleClose = () => {
         <DialogInput
           v-model="localName"
           label="Name"
-          placeholder="Section name"
+          :sectionColor="localColor"
         />
       </div>
       <div class="input-group">

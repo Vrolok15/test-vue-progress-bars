@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@radial-color-picker/vue-color-picker": "^6.0.0",
     "chart.js": "^4.4.8",
     "vue-chartjs": "^5.3.2",
     "vue-colour-picker": "^0.0.5",
