@@ -35,6 +35,7 @@ Check it out here - https://test-vue-progress-bars.vercel.app/
 
 Built with:
 - Vue 3
+- Vite
 - TypeScript
 - CSS Variables for theming
 - Material Icons for status indicators
@@ -44,12 +45,9 @@ Built with:
 
 I've used the following packages, thank you to the creators!
 
-- [Vue.js](https://vuejs.org/) - Progressive JavaScript Framework
-- [TypeScript](https://www.typescriptlang.org/) - Typed JavaScript
 - [Material Icons](https://fonts.google.com/icons) - Google's Material Design Icons
 - [vue-color-kit](https://vue-color-kit.vercel.app/) - Color Picker Component
 - [vue3-toastify](https://vue3-toastify.js-bridge.com/) - Toast Notifications
-- [Vite](https://vitejs.dev/) - Frontend Build Tool
 
 ## Usage
 
