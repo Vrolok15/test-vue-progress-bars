@@ -11,26 +11,11 @@ const transitionName = computed(() =>
   route.path === '/progress' ? 'slide-right' : 'slide-left'
 )
 
-// Debug transition events
-const onBeforeEnter = (el: Element) => {
-  console.log(`🟢 Before Enter: ${route.path}, transition: ${transitionName.value}`)
-}
-
-const onEnter = (el: Element) => {
-  console.log(`✅ Enter: ${route.path}, transition: ${transitionName.value}`)
-}
-
-const onBeforeLeave = (el: Element) => {
-  console.log(`🔴 Before Leave: ${route.path}, transition: ${transitionName.value}`)
+const onBeforeLeave = () => {
   isTransitioning.value = true
 }
 
-const onLeave = (el: Element) => {
-  console.log(`❌ Leave: ${route.path}, transition: ${transitionName.value}`)
-}
-
 const onAfterLeave = () => {
-  console.log(`⚫ After Leave: ${route.path}, transition: ${transitionName.value}`)
   isTransitioning.value = false
 }
 
@@ -60,10 +45,7 @@ const pages = [
         <transition
           :name="transitionName"
           mode="out-in"
-          @before-enter="onBeforeEnter"
-          @enter="onEnter"
           @before-leave="onBeforeLeave"
-          @leave="onLeave"
           @after-leave="onAfterLeave"
         >
           <component 
@@ -79,6 +61,20 @@ const pages = [
 <style>
 @import './assets/variables.css';
 
+/* Hide scrollbars but keep functionality */
+html {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+html::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+}
 
 h1 {
   border-bottom: 2px solid var(--color-shadow);
@@ -86,7 +82,7 @@ h1 {
   margin-bottom: 2rem;
   letter-spacing: 1rem;
   font-size: 3rem;
-  width: 100vw;
+  width: 100%;
 }
 
 #app {
@@ -94,7 +90,7 @@ h1 {
   flex-direction: column;
   height: 100vh;
   min-width: 100%;
-  padding: 1rem 0;
+  overflow: hidden; /* Added to prevent scrollbars */
 }
 
 .nav-menu {
