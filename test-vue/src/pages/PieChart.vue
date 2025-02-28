@@ -3,6 +3,15 @@ import PieChartComponent from '../components/PieChartComponent.vue'
 import PieChartSection from '../components/PieChartSection.vue'
 import Button from '../components/Button.vue'
 import { ref, computed } from 'vue'
+import SectionDialog from '../components/SectionDialog.vue'
+
+export interface Section {
+  id: number
+  name: string
+  color: string
+  percentage: number
+  enabled: boolean
+}
 
 const MAX_SECTIONS = 8
 
@@ -123,6 +132,26 @@ const handleDelete = (sectionId: number) => {
     section.percentage = section.percentage // Keep original percentage for when re-enabled
   }
 }
+
+const showDialog = ref(false)
+const editingSection = ref<Section | null>(null)
+
+const handleEdit = (section: Section) => {
+  editingSection.value = section
+  showDialog.value = true
+}
+
+const handleSave = (updates: { name: string, color: string, percentage: number }) => {
+  const section = editingSection.value && sections.value.find(s => s.id === editingSection.value?.id)
+  if (section) {
+    section.name = updates.name
+    section.color = updates.color
+    section.percentage = updates.percentage
+    balancePercentages(section.id)
+  }
+  showDialog.value = false
+  editingSection.value = null
+}
 </script>
 
 <template>
@@ -138,7 +167,8 @@ const handleDelete = (sectionId: number) => {
               v-model:name="section.name"
               v-model:color="section.color"
               :percentage="section.percentage"
-              @update:percentage="(value) => handlePercentageChange(section.id, value)"
+              :isEditing="editingSection?.id === section.id"
+              @edit="handleEdit(section)"
               @delete="handleDelete(section.id)"
             />
           </li>
@@ -153,6 +183,15 @@ const handleDelete = (sectionId: number) => {
         <PieChartComponent :sections="enabledSections" />
       </div>
     </div>
+    <SectionDialog
+      v-if="editingSection"
+      v-model="showDialog"
+      :name="editingSection.name"
+      :color="editingSection.color"
+      :percentage="editingSection.percentage"
+      @save="handleSave"
+      @close="editingSection = null"
+    />
   </div>
 </template>
 
@@ -214,5 +253,17 @@ ul {
   display: flex;
   justify-content: center;
   align-items: stretch;
+}
+
+.section-dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+}
+
+.section-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.5);
 }
 </style>

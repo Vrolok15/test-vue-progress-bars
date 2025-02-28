@@ -1,22 +1,21 @@
 <script setup lang="ts">
 interface Props {
-  label: string
-  onClick: () => void
-  variant?: 'default' | 'clear' | 'warning' | 'error'
+  label?: string
+  variant?: 'primary' | 'error' | 'clear' | 'warning' | 'default'
+  icon?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  variant: 'default'
+  label: '',
+  variant: 'primary',
+  icon: ''
 })
 </script>
 
 <template>
-  <button 
-    class="custom-button" 
-    :class="variant"
-    @click="onClick"
-  >
-    {{ label }}
+  <button :class="['button', variant]">
+    <span v-if="icon" class="material-symbols-outlined">{{ icon }}</span>
+    <span v-else>{{ label }}</span>
   </button>
 </template>
 
@@ -25,29 +24,50 @@ const props = withDefaults(defineProps<Props>(), {
 </style>
 
 <style scoped>
-.custom-button {
-  padding: 8px 16px;
-  color: white;
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 16px;
-  background-color: var(--color-green);
+  font-size: 0.9rem;
+  min-width: 32px;
+  min-height: 32px;
+  transition: all 0.2s;
 }
 
-.custom-button.clear {
+.primary {
   background-color: var(--color-blue);
+  color: white;
 }
 
-.custom-button.warning {
-  background-color: var(--color-orange);
-}
-
-.custom-button.error {
+.error {
   background-color: var(--color-red);
+  color: white;
 }
 
-.custom-button:hover {
-  opacity: 0.9;
+.clear {
+  background-color: transparent;
+  color: var(--color-gray);
+}
+
+.clear:hover {
+  background-color: var(--color-shadow);
+}
+
+.material-symbols-outlined {
+  font-size: 20px;
+}
+
+.warning {
+  background-color: var(--color-orange);
+  color: white;
+}
+
+.default {
+  background-color: var(--color-green);
+  color: white;
 }
 </style> 
