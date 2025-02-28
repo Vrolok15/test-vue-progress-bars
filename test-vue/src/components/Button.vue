@@ -49,7 +49,8 @@ const props = withDefaults(defineProps<Props>(), {
 }
 
 .clear {
-  background-color: transparent;
+  background-color: var(--color-background);
+  border: 1px solid var(--color-shadow);
   color: var(--color-gray);
 }
 
