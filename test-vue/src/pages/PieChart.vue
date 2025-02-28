@@ -169,6 +169,9 @@ const handleDelete = (sectionId: number) => {
 const showDialog = ref(false)
 const editingSection = ref<Section | null>(null)
 
+// Add this with other refs at the top of the component
+const colorChangeCounters = ref<{ [key: number]: number }>({})
+
 const handleEdit = (section: Section) => {
   editingSection.value = section
   showDialog.value = true
@@ -179,18 +182,28 @@ const handleSave = (updates: { name: string, color: string, percentage: number }
   if (section) {
     section.name = updates.name
     
-    // Always create/update a CSS variable for the color
-    const varName = `--section-color-${section.id}`
-    if (updates.color.startsWith('#')) {
-      // For hex colors from color picker
-      document.documentElement.style.setProperty(varName, updates.color)
+    // Initialize or increment the counter for this section
+    if (!colorChangeCounters.value[section.id]) {
+      colorChangeCounters.value[section.id] = 1
     } else {
-      // For our predefined colors, copy their value
-      const value = getComputedStyle(document.documentElement)
-        .getPropertyValue(updates.color.replace('var(', '').replace(')', ''))
-      document.documentElement.style.setProperty(varName, value)
+      colorChangeCounters.value[section.id]++
     }
-    // Always use CSS variable in section
+    
+    // Create CSS variable with counter
+    const varName = `--section-color-${section.id}-${colorChangeCounters.value[section.id]}`
+    const root = document.documentElement
+    
+    if (updates.color.startsWith('var(')) {
+      // For predefined colors, copy their value
+      const varToGet = updates.color.replace('var(', '').replace(')', '')
+      const value = getComputedStyle(root).getPropertyValue(varToGet)
+      root.style.setProperty(varName, value)
+    } else {
+      // For hex colors from color picker
+      root.style.setProperty(varName, updates.color)
+    }
+    
+    // Update section to use the CSS variable
     section.color = `var(${varName})`
     
     section.percentage = updates.percentage
