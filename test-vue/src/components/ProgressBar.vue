@@ -53,9 +53,9 @@ const renderShape = computed(() => {
     case 'dashboard':
       return {
         ...baseShape,
-        viewBox: '0 0 100 60',
-        startAngle: -90,
-        endAngle: 90
+        viewBox: '0 0 100 100',
+        startAngle: -126,
+        endAngle: 126
       }
     case 'bar':
       return {
@@ -133,6 +133,7 @@ const switchShape = (direction: 'prev' | 'next') => {
               fill="none"
               stroke="var(--color-shape-background)"
               stroke-width="5"
+              stroke-linecap="round"
             />
             <!-- Progress arc -->
             <path
