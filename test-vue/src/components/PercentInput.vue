@@ -62,6 +62,7 @@ input {
   padding: 4px 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  height: 30px;
 }
 
 input:focus {

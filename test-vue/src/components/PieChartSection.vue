@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import PercentInput from './PercentInput.vue'
+import Button from './Button.vue'
 
 interface Props {
   name: string
@@ -10,6 +11,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   name: '',
+  emojiCode: '',
   color: 'var(--color-blue)',
   percentage: 0
 })
@@ -18,6 +20,7 @@ const emit = defineEmits<{
   'update:name': [value: string]
   'update:color': [value: string]
   'update:percentage': [value: number]
+  'delete': []
 }>()
 
 const localName = ref(props.name)
@@ -26,11 +29,19 @@ const colors = [
   { name: 'Blue', value: 'var(--color-blue)' },
   { name: 'Green', value: 'var(--color-green)' },
   { name: 'Red', value: 'var(--color-red)' },
-  { name: 'Orange', value: 'var(--color-orange)' }
+  { name: 'Orange', value: 'var(--color-orange)' },
+  { name: 'Brown', value: 'var(--color-brown)' },
+  { name: 'Yellow', value: 'var(--color-yellow)' },
+  { name: 'Purple', value: 'var(--color-purple)' },
+  { name: 'Pink', value: 'var(--color-pink)' }
 ]
 
 const handlePercentChange = (value: number | null) => {
   emit('update:percentage', value ?? 0)
+}
+
+const handleDelete = () => {
+  emit('delete')
 }
 </script>
 
@@ -67,6 +78,9 @@ const handlePercentChange = (value: number | null) => {
         @update:model-value="handlePercentChange"
       />
     </div>
+    <div class="input-group">
+      <Button @click="handleDelete" label="🗑️" variant="error" />
+    </div>
   </div>
 </template>
 
@@ -75,7 +89,11 @@ const handlePercentChange = (value: number | null) => {
   padding: 1rem;
   border: 1px solid var(--color-shadow);
   border-radius: 4px;
-  margin-bottom: 1rem;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
 .input-group {
@@ -83,6 +101,7 @@ const handlePercentChange = (value: number | null) => {
   align-items: center;
   gap: 1rem;
   margin-bottom: 0.5rem;
+  height: 30px;
 }
 
 .input-group:last-child {
@@ -90,7 +109,7 @@ const handlePercentChange = (value: number | null) => {
 }
 
 label {
-  min-width: 80px;
+  min-width: 40px;
   color: var(--color-gray);
 }
 
@@ -104,5 +123,12 @@ input, select {
 
 select {
   cursor: pointer;
+}
+
+.name-with-emoji {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
 }
 </style> 

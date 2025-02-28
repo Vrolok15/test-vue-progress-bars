@@ -48,21 +48,43 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const chartData = computed<ChartData>(() => ({
-  labels: props.sections.map(section => section.name || 'Unnamed Section'),
-  datasets: [{
-    data: props.sections.map(section => section.percentage),
-    backgroundColor: props.sections.map(section => getColor(section.color.replace('var(', '').replace(')', ''))),
-    borderColor: Array(props.sections.length).fill('white'),
-    borderWidth: 2,
-    hoverBackgroundColor: props.sections.map(section => {
-      const colorVar = section.color.replace('var(--color-', '').replace(')', '')
-      return getColor(`--color-${colorVar}-shadow`)
-    }),
-    hoverBorderColor: Array(props.sections.length).fill('white'),
-    hoverBorderWidth: 3
-  }]
-}))
+const chartData = computed<ChartData>(() => {
+  const activeData = props.sections.map(section => section.percentage)
+  const totalPercentage = activeData.reduce((sum, value) => sum + value, 0)
+  
+  // Add empty section if total is less than 100%
+  const data = totalPercentage < 100 
+    ? [...activeData, 100 - totalPercentage]
+    : activeData
+
+  const labels = [...props.sections.map(section => section.name || 'Unnamed Section')]
+
+  const colors = props.sections.map(section => 
+    getColor(section.color.replace('var(', '').replace(')', ''))
+  )
+  if (totalPercentage < 100) {
+    colors.push('#f5f5f5') // Light gray for unused space
+  }
+
+  return {
+    labels,
+    datasets: [{
+      data,
+      backgroundColor: colors,
+      borderColor: Array(data.length).fill('white'),
+      borderWidth: 2,
+      hoverBackgroundColor: [
+        ...props.sections.map(section => {
+          const colorVar = section.color.replace('var(--color-', '').replace(')', '')
+          return getColor(`--color-${colorVar}-shadow`)
+        }),
+        totalPercentage < 100 ? '#f5f5f5' : []
+      ].flat(),
+      hoverBorderColor: Array(data.length).fill('white'),
+      hoverBorderWidth: 3
+    }]
+  }
+})
 
 const chartOptions = computed(() => ({
   responsive: true,
