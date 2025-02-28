@@ -32,11 +32,11 @@ const handleDelete = () => {
   <div class="section" :class="{ editing: isEditing }">
     <div class="info-group">
       <span class="label">Name:</span>
-      <span class="value">{{ name }}</span>
+      <span class="value" :style="{ color: color, textShadow: '0 0 4px var(--color-shadow)' }">{{ name }}</span>
     </div>
     <div class="info-group">
       <span class="label">Color:</span>
-      <span class="color-preview" :style="{ backgroundColor: color }"></span>
+      <span class="color-preview" :style="{ backgroundColor: color, boxShadow: '0 0 4px var(--color-shadow)' }"></span>
     </div>
     <div class="info-group">
       <span class="label">Percentage:</span>

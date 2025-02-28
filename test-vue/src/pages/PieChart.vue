@@ -118,10 +118,43 @@ const balancePercentages = (excludeId: number) => {
 
 // Enable next disabled section
 const enableNextSection = () => {
-  const section = firstDisabledSection.value
-  if (section) {
+  const currentEnabled = sections.value.filter(s => s.enabled)
+  const total = currentEnabled.reduce((sum, s) => sum + s.percentage, 0)
+
+  if (total >= 99.9) {
+    const section = firstDisabledSection.value
+    if (!section) return
+
+    // Get current enabled sections
+    const currentEnabled = sections.value.filter(s => s.enabled)
+    
+    // Calculate new equal distribution
+    const newCount = currentEnabled.length + 1
+    const equalShare = Math.round(100 / newCount * 10) / 10
+
+    // Update all enabled sections including the new one
+    currentEnabled.forEach(s => {
+      s.percentage = equalShare
+    })
+    
     section.enabled = true
-    balancePercentages(section.id)
+    section.percentage = equalShare
+
+    // Adjust for rounding errors to ensure total is 100%
+    const total = Math.round(equalShare * newCount * 10) / 10
+    if (total !== 100) {
+      const firstSection = currentEnabled[0] || section
+      firstSection.percentage += Math.round((100 - total) * 10) / 10
+      if (firstSection.percentage.toString().length > 4) {
+        firstSection.percentage = parseFloat(firstSection.percentage.toFixed(2))
+      }
+    }
+  }
+  else if (total < 99.9) {
+    const section = firstDisabledSection.value
+    if (!section) return
+    section.enabled = true
+    section.percentage = 100 - total
   }
 }
 
