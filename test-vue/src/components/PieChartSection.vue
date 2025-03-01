@@ -58,13 +58,25 @@ const handleDelete = () => {
   display: flex;
   align-items: center;
   gap: 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1024px) {
+  .section {
+    flex-direction: column;
+  }
+
+  .actions {
+    margin-right: auto;
+    margin-top: 1rem;
+  }
 }
 
 .info-group {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  min-width: 120px;
+  gap: 0.25rem;
 }
 
 .label {
@@ -86,7 +98,7 @@ const handleDelete = () => {
 .actions {
   margin-left: auto;
   display: flex;
-  gap: 0.5rem;
+  gap: 0.25rem;
 }
 
 .section.editing {

@@ -288,7 +288,8 @@ const handleSave = (updates: { name: string, color: string, percentage: number }
   border-radius: 8px;
   box-shadow: 0 4px 12px var(--color-shadow);
   padding: 0 1.5rem;
-  min-width: 500px;
+  min-width: 300px;
+  max-width: 500px;
   max-height: 800px;
   overflow-y: auto;
 }
@@ -315,6 +316,8 @@ ul {
   display: flex;
   justify-content: center;
   align-items: stretch;
+  min-width: 300px;
+  max-width: 500px;
 }
 
 .section-dialog {
