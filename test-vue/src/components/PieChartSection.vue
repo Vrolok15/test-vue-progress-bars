@@ -30,7 +30,7 @@ const handleDelete = () => {
 
 <template>
   <div class="section" :class="{ editing: isEditing }">
-    <div class="info-group">
+    <div class="info-group" style="min-width: 100px;">
       <span class="label">Name:</span>
       <span class="value" :style="{ color: color, textShadow: '0 0 4px var(--color-shadow)' }">{{ name }}</span>
     </div>
@@ -97,6 +97,7 @@ const handleDelete = () => {
 
 .actions {
   margin-left: auto;
+  align-items: flex-end;
   display: flex;
   gap: 0.25rem;
 }
