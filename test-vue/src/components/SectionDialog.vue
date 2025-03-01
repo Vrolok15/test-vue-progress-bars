@@ -73,6 +73,7 @@ const handleClose = () => {
           v-model="localName"
           label="Name"
           :sectionColor="localColor"
+          :maxLength="15"
         />
       </div>
       <div class="input-group">

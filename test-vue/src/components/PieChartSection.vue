@@ -30,9 +30,9 @@ const handleDelete = () => {
 
 <template>
   <div class="section" :class="{ editing: isEditing }">
-    <div class="info-group" style="min-width: 100px;">
+    <div class="info-group info-group-name">
       <span class="label">Name:</span>
-      <span class="value" :style="{ color: color, textShadow: '0 0 4px var(--color-shadow)' }">{{ name }}</span>
+      <span class="value" :style="{ color: color, textShadow: '0 0 4px var(--color-shadow)', wordBreak: 'break-word' }">{{ name }}</span>
     </div>
     <div class="info-group">
       <span class="label">Color:</span>
@@ -62,9 +62,19 @@ const handleDelete = () => {
   box-sizing: border-box;
 }
 
+.info-group-name {
+  min-width: 150px;
+  max-width: 150px;
+}
+
 @media (max-width: 1024px) {
   .section {
     flex-direction: column;
+  }
+
+  .info-group-name {
+    min-width: 0;
+    max-width: 100%;
   }
 
   .actions {

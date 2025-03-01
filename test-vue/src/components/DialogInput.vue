@@ -8,12 +8,14 @@ interface Props {
   type?: 'text' | 'select' | 'percent'
   options?: { name: string, value: string }[]
   sectionColor?: string
+  maxLength?: number
 }
 
 const props = withDefaults(defineProps<Props>(), {
   placeholder: '',
   type: 'text',
-  sectionColor: ''
+  sectionColor: '',
+  maxLength: undefined
 })
 
 const emit = defineEmits<{
@@ -80,6 +82,7 @@ const handleBlur = (event: Event) => {
         :style="{ color: sectionColor }"
         @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
         :placeholder="placeholder"
+        :maxlength="maxLength"
       />
       <ColorPicker
         v-else-if="type === 'select'"
